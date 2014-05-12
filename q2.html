@@ -1,0 +1,110 @@
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     version="1.1"
+     baseProfile="full"
+     width="800" height="650"
+     onload="OnLoadEvent(evt)">
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#3285EF" offset="0%"></stop>
+            <stop stop-color="#2B5EDB" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.224480124 0" in="shadowBlurOuter1" type="matrix" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMorphology radius="1" in="SourceAlpha" operator="dilate" result="shadowSpreadInner1"></feMorphology>
+            <feOffset dx="0" dy="0" in="shadowSpreadInner1" result="shadowOffsetInner1"></feOffset>
+            <feGaussianBlur stdDeviation="0" in="shadowOffsetInner1" result="shadowBlurInner1"></feGaussianBlur>
+            <feComposite in="shadowBlurInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.0849465763 0" in="shadowInnerInner1" type="matrix" result="shadowMatrixInner1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+                <feMergeNode in="shadowMatrixInner1"></feMergeNode>
+            </feMerge>
+        </filter>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.210868566 0" in="shadowBlurOuter1" type="matrix" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+
+        <g id="Send-Button" sketch:type="MSLayerGroup" transform="translate(4.000000, 3.000000)">
+            <rect id="Base" stroke="#2A4BA5" fill="url(#linearGradient-1)" filter="url(#filter-2)" sketch:type="MSShapeGroup" x="0" y="0" width="110" height="44" rx="4"></rect>
+            <text id="Next" fill="#FFFFFF" filter="url(#filter-3)" sketch:type="MSTextLayer" font-family="Avenir Next" font-size="18" font-weight="420">
+                <tspan x="34" y="29">Next</tspan>
+            </text>
+        </g>
+    </defs>
+    <!-- the photo  -->
+    <g id="photo">
+    <image xlink:href="ust.JPG" x="200" y="150" width="448" height="299" />
+    </g>
+    <g id="next1" onclick="animate(1)" style = "visibility:visible">
+        <use x="0" y="0" xlink:href = "#Send-Button"/>
+    </g>
+    <g id="next2" onclick="animate(2)" style = "visibility:hidden">
+        <use x="0" y="0" xlink:href = "#Send-Button"/>
+    </g>
+    <g id="next3" onclick="animate(3)" style = "visibility:hidden">
+        <use x="0" y="0" xlink:href = "#Send-Button"/>
+    </g>
+    <script>
+    <![CDATA[
+    var photo = null, x1 = 400, y1 = 350, psi = 0; //x1,y1 are center of rectangle
+
+    // == the animation function ==
+    function animate(i) {
+        var sp = Math.sin(psi), cp = Math.cos(psi),
+            x2 = 400, y2 = 350, //x2,y2 are center of rectangle shown
+            matrix = "matrix(" + cp + "," + sp + "," + (-sp) + "," + cp + "," +
+                        (-x1 * cp + y1 * sp + x2) + "," +
+                        (-x1 * sp - y1 * cp + y2) + ")";
+
+        photo.setAttribute("transform", matrix);
+        psi += Math.PI/45;
+        console.log(psi);
+        if(i=='1')
+        {
+            if (psi < 2.1)
+            {
+                setTimeout("animate(1)", 10);
+            }
+            svgdoc.getElementById("next1").style.setProperty("visibility", "hidden",null);
+            svgdoc.getElementById("next2").style.setProperty("visibility", "visible",null);
+        }
+        if(i=='2')
+        {
+            if (psi < 4.2)
+            {
+                setTimeout("animate(2)", 10);
+            }
+            svgdoc.getElementById("next2").style.setProperty("visibility", "hidden",null);
+            svgdoc.getElementById("next3").style.setProperty("visibility", "visible",null);
+        }
+        if(i=='3')
+        {
+            if (psi < 6.3)
+            {
+                setTimeout("animate(3)", 10);
+            }
+            svgdoc.getElementById("next3").style.setProperty("visibility", "hidden",null);
+        }
+    }
+    //After testing, psi<6.3 (psi = 6.283185307179582) would cause the rectangle to routate 360 degree (don't know why)
+
+    // == the function to get things started ==
+    function OnLoadEvent(event) {
+        svgdoc = event.target.ownerDocument;
+        photo = svgdoc.getElementById("photo");
+    }
+    ]]>
+    </script>
+
+</svg>
